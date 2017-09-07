@@ -11,25 +11,22 @@ $test = 'jabjcdel';
 
 function longestLength($str)
 {
-    $map = array();
-    $max = 0;
-    $length = strlen($str);
-    $j = 0;
-
-    for ($i = 0; $i < $length; $i++) {
-        $char = $str[$i];
-
-        if (array_key_exists($char, $map)) {
-            $prevIdx = $map[$char];
-            $j = max($j, $prevIdx + 1);
+    $isUniqueString = function ($string) {
+        return count(array_flip(str_split($string))) == strlen($string);
+    };
+    $findBiggestUniqueSubstringLength = function ($string) use ($isUniqueString) {
+        $length = strlen($string);
+        for ($i = $length - 1; $i >= 0; $i --) {
+            for ($j = 0; $j < $length - $i; $j ++) {
+                $sub = substr($string, $j, $i + 1);
+                if ($isUniqueString($sub)) {
+                    return $i + 1;
+                }
+            }
         }
-
-        $map[$char] = $i;
-
-        $max = max($max, $i - $j + 1);
-    }
-
-    return $max;
+        return 0;
+    };
+    return $findBiggestUniqueSubstringLength($str);
 }
 
 print_r(longestLength($test));
